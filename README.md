@@ -1,6 +1,7 @@
 # SiteServer CMS
 
-SiteServer CMS 基于.NET 平台，能够以最低的成本、最少的人力投入在最短的时间内架设一个功能齐全、性能优异、规模庞大并易于维护的网站平台。本版本基于开源的SiteServer基础上开发@https://github.com/siteserver/cms
+SiteServer CMS 基于.NET 平台，能够以最低的成本、最少的人力投入在最短的时间内架设一个功能齐全、性能优异、规模庞大并易于维护的网站平台。
+#本版本是基于开源的SiteServer基础上开发@https://github.com/siteserver/cms
 
 ![SiteServer CMS](https://sscms.com/assets/images/github-banner.png)
 
