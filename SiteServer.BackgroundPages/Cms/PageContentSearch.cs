@@ -124,7 +124,7 @@ namespace SiteServer.BackgroundPages.Cms
                 TableName = tableName,
                 PageSize = SiteInfo.Additional.PageSize,
                 Page = AuthRequest.GetQueryInt(Pager.QueryNamePage, 1),
-                OrderSqlString = ETaxisTypeUtils.GetContentOrderByString(ETaxisType.OrderByIdDesc),
+                OrderSqlString = state == -200? "ORDER BY IsChecked ASC,CheckedLevel DESC" : ETaxisTypeUtils.GetContentOrderByString(ETaxisType.OrderByIdDesc),
                 ReturnColumnNames = TranslateUtils.ObjectCollectionToString(allAttributeNameList),
                 WhereSqlString = whereString,
                 TotalCount = DataProvider.DatabaseDao.GetPageTotalCount(tableName, whereString)

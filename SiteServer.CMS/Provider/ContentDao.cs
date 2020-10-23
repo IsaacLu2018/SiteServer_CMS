@@ -268,10 +268,10 @@ namespace SiteServer.CMS.Provider
 
         public void UpdateIsChecked(string tableName, int siteId, int channelId, List<int> contentIdList, int translateChannelId, string userName, bool isChecked, int checkedLevel, string reasons)
         {
-            if (isChecked)
-            {
-                checkedLevel = 0;
-            }
+            //if (isChecked)
+            //{
+            //    checkedLevel = 0;
+            //}
 
             var checkDate = DateTime.Now;
 
@@ -2447,7 +2447,6 @@ group by tmp.userName";
         {
             var isAllChannels = false;
             var searchChannelIdList = new List<int>();
-
             if (isSelfOnly)
             {
                 searchChannelIdList = new List<int>
@@ -2538,21 +2537,21 @@ group by tmp.userName";
                 //    ? $"{searchType} LIKE '%{keyword}%'"
                 //    : $"{nameof(ContentAttribute.SettingsXml)} LIKE '%{searchType}={keyword}%'");
             }
+            //if (isCheckOnly&& checkLevel == CheckManager.LevelInt.All)
+            //{
+            //    whereList.Add($"{nameof(ContentAttribute.CheckedLevel)} = {checkLevel}");
+            //}
+            //else
+            //{
 
-            if (isCheckOnly)
+            //    if (checkLevel != CheckManager.LevelInt.All)
+            //    {
+            //        whereList.Add($" {nameof(ContentAttribute.CheckedLevel)} = {checkLevel}");
+            //    }
+            //}
+            if (checkLevel != CheckManager.LevelInt.All)
             {
-                whereList.Add(checkLevel == CheckManager.LevelInt.All
-                    ? $"{nameof(ContentAttribute.IsChecked)} = '{false}'"
-                    : $"{nameof(ContentAttribute.IsChecked)} = '{false}' AND {nameof(ContentAttribute.CheckedLevel)} = {checkLevel}");
-            }
-            else
-            {
-                if (checkLevel != CheckManager.LevelInt.All)
-                {
-                    whereList.Add(checkLevel == siteInfo.Additional.CheckContentLevel
-                        ? $"{nameof(ContentAttribute.IsChecked)} = '{true}'"
-                        : $"{nameof(ContentAttribute.IsChecked)} = '{false}' AND {nameof(ContentAttribute.CheckedLevel)} = {checkLevel}");
-                }
+                whereList.Add($" {nameof(ContentAttribute.CheckedLevel)} = {checkLevel}");
             }
 
             if (adminId > 0)

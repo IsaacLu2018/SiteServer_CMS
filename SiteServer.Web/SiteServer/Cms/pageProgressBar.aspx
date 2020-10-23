@@ -56,7 +56,7 @@
               <div id="progressBarText" style="font-weight: bold; padding: 5px;">任务完成:
                 <font id="prgressBarPercetage">0</font>%</div>
               <div id="progressBarBox" style="width: 350px; height: 25px;  background: #eee;">
-                <div id="progressBarBoxContent" style="width: 0; height: 25px; background: #00b19d;"></div>
+                <div id="progressBarBoxContent" style="width: 0; height: 25px; background: rgb(49 98 161 / 1);"></div>
               </div>
             </div>
           </div>

@@ -144,7 +144,8 @@ namespace SiteServer.API.Controllers.Pages
                         UserId = adminInfo.Id,
                         adminInfo.UserName,
                         adminInfo.AvatarUrl,
-                        Level = permissions.GetAdminLevel()
+                        Level = permissions.GetAdminLevel(),
+                        adminInfo.DisplayName
                     }
                 });
             }

@@ -87,8 +87,8 @@
 }
 
 .btn-primary {
-  background-color: #00b19d !important;
-  border: 1px solid #00b19d !important;
+  background-color: rgb(49 98 161 / 1) !important;
+  border: 1px solid rgb(49 98 161 / 1) !important;
 }
 
 .btn-primary:hover,
@@ -100,8 +100,8 @@
 .btn-primary:focus,
 .btn-primary:hover,
 .open>.dropdown-toggle.btn-primary {
-  background-color: #009886 !important;
-  border: 1px solid #009886 !important;
+  background-color: rgb(49 98 161 / 1) !important;
+  border: 1px solid rgb(49 98 161 / 1) !important;
 }
 
 .btn-success {
@@ -228,7 +228,7 @@
 }
 
 .btn-custom.btn-primary {
-  border-bottom: 2px solid #007e70 !important;
+  border-bottom: 2px solid rgb(49 98 161 / 1) !important;
 }
 
 .btn-custom.btn-success {
@@ -346,7 +346,7 @@
 }
 
 .panel-primary>.panel-heading {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
 }
 
 .panel-success>.panel-heading {
@@ -393,8 +393,8 @@
 }
 
 .panel-border.panel-primary .panel-heading {
-  border-color: #00b19d !important;
-  color: #00b19d !important;
+  border-color: rgb(49 98 161 / 1) !important;
+  color: rgb(49 98 161 / 1) !important;
 }
 
 .panel-border.panel-success .panel-heading {
@@ -690,8 +690,8 @@
 }
 
 .checkbox-primary input[type="checkbox"]:checked+label::before {
-  background-color: #00b19d;
-  border-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
+  border-color: rgb(49 98 161 / 1);
 }
 
 .checkbox-primary input[type="checkbox"]:checked+label::after {
@@ -851,15 +851,15 @@
 }
 
 .radio-primary input[type="radio"]+label::after {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
 }
 
 .radio-primary input[type="radio"]:checked+label::before {
-  border-color: #00b19d;
+  border-color: rgb(49 98 161 / 1);
 }
 
 .radio-primary input[type="radio"]:checked+label::after {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
   margin-top: 5px;
 }
 
@@ -994,7 +994,7 @@
 }
 
 .progress-bar-primary {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
 }
 
 .progress-bar-success {
@@ -1144,12 +1144,12 @@ th {
 }
 
 table.focus-on tbody tr.focused th {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
   color: #ffffff;
 }
 
 table.focus-on tbody tr.focused td {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
   color: #ffffff;
 }
 
@@ -1221,7 +1221,7 @@ div#datatable-buttons_info {
 /* Key table */
 table.dataTable th.focus,
 table.dataTable td.focus {
-  outline: 3px solid #00b19d !important;
+  outline: 3px solid rgb(49 98 161 / 1) !important;
   outline-offset: -1px;
 }
 
@@ -1302,8 +1302,8 @@ table.dataTable td.focus {
 }
 
 .table-rep-plugin .checkbox-row input[type="checkbox"]:checked+label::before {
-  background-color: #00b19d;
-  border-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
+  border-color: rgb(49 98 161 / 1);
 }
 
 .table-rep-plugin .checkbox-row input[type="checkbox"]:checked+label::after {
@@ -1381,7 +1381,7 @@ table.dataTable td.focus {
 .tablesaw-enhanced .tablesaw-bar .btn:hover,
 .tablesaw-enhanced .tablesaw-bar .btn:focus,
 .tablesaw-enhanced .tablesaw-bar .btn:active {
-  color: #00b19d !important;
+  color: rgb(49 98 161 / 1) !important;
   background-color: #f5f5f5;
   outline: none !important;
   box-shadow: none !important;
@@ -1461,14 +1461,14 @@ table.dataTable td.focus {
 .datepicker table tr td span.active:hover[disabled],
 .datepicker table tr td span.active.disabled[disabled],
 .datepicker table tr td span.active.disabled:hover[disabled] {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
 }
 
 .datepicker table tr td.active,
 .datepicker table tr td.active:hover,
 .datepicker table tr td.active.disabled,
 .datepicker table tr td.active.disabled:hover {
-  background-color: #00b19d !important;
+  background-color: rgb(49 98 161 / 1) !important;
   background-image: none;
   box-shadow: none;
   text-shadow: none;
@@ -1485,8 +1485,8 @@ table.dataTable td.focus {
 
 .daterangepicker td.active,
 .daterangepicker td.active:hover {
-  background-color: #00b19d;
-  border-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
+  border-color: rgb(49 98 161 / 1);
 }
 
 .daterangepicker .input-mini.active {
@@ -1514,8 +1514,8 @@ table.dataTable td.focus {
 
 .daterangepicker .ranges li.active,
 .daterangepicker .ranges li:hover {
-  background-color: #00b19d;
-  border: 1px solid #00b19d;
+  background-color: rgb(49 98 161 / 1);
+  border: 1px solid rgb(49 98 161 / 1);
 }
 
 .search-input {
@@ -1532,11 +1532,11 @@ table.dataTable td.focus {
 }
 
 .ms-container .ms-selectable li.ms-hover {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
 }
 
 .ms-container .ms-selection li.ms-hover {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
 }
 
 .note-editor {
@@ -1573,7 +1573,7 @@ table.dataTable td.focus {
   background-color: transparent;
   border-color: transparent;
   border-radius: 4px;
-  color: #00b19d;
+  color: rgb(49 98 161 / 1);
   text-decoration: none;
 }
 
@@ -1585,7 +1585,7 @@ table.dataTable td.focus {
 .datepicker table tr td.active:hover,
 .datepicker table tr td.active.disabled,
 .datepicker table tr td.active.disabled:hover {
-  background-color: #00b19d !important;
+  background-color: rgb(49 98 161 / 1) !important;
   background-image: none;
   box-shadow: none;
 }

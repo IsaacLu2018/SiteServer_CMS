@@ -230,7 +230,7 @@ pre {
   background: transparent !important;
 }
 .bg-primary {
-  background-color: #00b19d !important;
+  background-color: rgb(49 98 161 / 1) !important;
 }
 .bg-success {
   background-color: #3bafda !important;
@@ -269,7 +269,7 @@ pre {
   color: #98a6ad;
 }
 .text-primary {
-  color: #00b19d;
+  color: rgb(49 98 161 / 1);
 }
 .text-warning {
   color: #8a6d3b;
@@ -313,7 +313,7 @@ pre {
   color: #ffffff !important;
 }
 .label-primary {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
 }
 .label-success {
   background-color: #3bafda;
@@ -356,7 +356,7 @@ pre {
   transform: translate(0, -2px);
 }
 .badge-primary {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
 }
 .badge-success {
   background-color: #3bafda;
@@ -411,8 +411,8 @@ pre {
 .pagination > .active > span:hover,
 .pagination > .active > a:focus,
 .pagination > .active > span:focus {
-  background-color: #00b19d;
-  border-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
+  border-color: rgb(49 98 161 / 1);
 }
 .pager .disabled > a,
 .pager .disabled > a:focus,
@@ -455,10 +455,10 @@ pre {
   width: 100%;
 }
 .tabs li.tab a.active {
-  color: #00b19d !important;
+  color: rgb(49 98 161 / 1) !important;
 }
 .tabs .indicator {
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
   bottom: 0;
   height: 2px;
   position: absolute;
@@ -482,7 +482,7 @@ pre {
   color: #ffffff !important;
 }
 .card-box .nav-pills li.active a {
-  background-color: #00b19d !important;
+  background-color: rgb(49 98 161 / 1) !important;
 }
 .tabs-vertical-env {
   margin-bottom: 30px;
@@ -527,7 +527,7 @@ pre {
   font-family: 'Microsoft YaHei', sans-serif;
 }
 .nav.nav-tabs > li > a:hover {
-  color: #00b19d !important;
+  color: rgb(49 98 161 / 1) !important;
 }
 .nav.tabs-vertical > li > a {
   background-color: transparent;
@@ -539,7 +539,7 @@ pre {
   padding: 0px 20px;
 }
 .nav.tabs-vertical > li > a:hover {
-  color: #00b19d !important;
+  color: rgb(49 98 161 / 1) !important;
 }
 .tab-content {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
@@ -559,21 +559,21 @@ pre {
   border-top: 2px solid transparent !important;
 }
 .navtab-custom li.active a {
-  border-top: 2px solid #00b19d !important;
+  border-top: 2px solid rgb(49 98 161 / 1) !important;
 }
 .nav-tab-left.navtab-custom li a {
   border: none !important;
   border-left: 2px solid transparent !important;
 }
 .nav-tab-left.navtab-custom li.active a {
-  border-left: 2px solid #00b19d !important;
+  border-left: 2px solid rgb(49 98 161 / 1) !important;
 }
 .nav-tab-right.navtab-custom li a {
   border: none !important;
   border-right: 2px solid transparent !important;
 }
 .nav-tab-right.navtab-custom li.active a {
-  border-right: 2px solid #00b19d !important;
+  border-right: 2px solid rgb(49 98 161 / 1) !important;
 }
 .nav-tabs.nav-justified > .active > a,
 .nav-tabs.nav-justified > .active > a:hover,
@@ -587,7 +587,7 @@ pre {
 .tabs-vertical > li.active > a,
 .tabs-vertical > li.active > a:focus,
 .tabs-vertical > li.active > a:hover {
-  color: #00b19d !important;
+  color: rgb(49 98 161 / 1) !important;
 }
 /* Dropcap */
 .dropcap {
@@ -657,7 +657,7 @@ pre {
   padding: 15px 25px 15px 25px;
   line-height: 22px;
   font-size: 18px;
-  background-color: #00b19d;
+  background-color: rgb(49 98 161 / 1);
   color: #ffffff;
   text-align: left;
   margin: 0px;
@@ -735,10 +735,10 @@ pre {
   font-weight: 300;
 }
 .list-group-item.active > .badge {
-  color: #00b19d;
+  color: rgb(49 98 161 / 1);
 }
 .nav-pills > .active > a > .badge {
-  color: #00b19d;
+  color: rgb(49 98 161 / 1);
 }
 .has-success .form-control {
   border-color: #3bafda;
@@ -779,7 +779,7 @@ pre {
 }
 .popover .popover-title {
   background-color: transparent;
-  color: #00b19d;
+  color: rgb(49 98 161 / 1);
   font-weight: 600;
 }
 /* ===========
@@ -960,7 +960,7 @@ pre {
   background-clip: padding-box;
 }
 .icon-list-demo .col-md-4:hover {
-  color: #00b19d;
+  color: rgb(49 98 161 / 1);
 }
 .icon-list-demo .col-md-4:hover i {
   -o-transform: scale(1.5);

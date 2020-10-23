@@ -26,18 +26,23 @@
               <img :src="adminLogoUrl" style="max-width: 160px;" />
             </a>
           </div>
-          <a v-if="!isDesktop" href="javascript:;" class="position-fixed" v-on:click="btnMobileMenuClick" style="right: 20px;top: 10px;">
-            <i :class="{'ion-navicon': !isMobileMenu, 'ion-android-close': isMobileMenu}" style="font-size: 28px;color: #fff;"></i>
+          <a v-if="!isDesktop" href="javascript:;" class="position-fixed" v-on:click="btnMobileMenuClick"
+          style="right: 20px;top: 10px;">
+            <i :class="{'ion-navicon': !isMobileMenu, 'ion-android-close': isMobileMenu}"
+            style="font-size: 28px;color: #fff;"></i>
           </a>
           <ul v-if="isDesktop" id="topMenus" class="navigation-menu">
             <li v-for="topMenu in topMenus" class="has-submenu">
-              <a :href="getHref(topMenu)" v-on:click="btnTopMenuClick(topMenu, $event)" :target="getTarget(topMenu)" v-html="topMenu.text"></a>
+              <a :href="getHref(topMenu)" v-on:click="btnTopMenuClick(topMenu, $event)" :target="getTarget(topMenu)"
+              v-html="topMenu.text" :style="getStyle(topMenu)"></a>
               <ul v-if="topMenu.hasChildren" class="submenu">
                 <li v-for="parentMenu in topMenu.children" :class="{'has-submenu': parentMenu.children}">
-                  <a :href="getHref(parentMenu)" v-on:click="btnTopMenuClick(parentMenu, $event)" :target="getTarget(parentMenu)" v-html="parentMenu.text"></a>
+                  <a :href="getHref(parentMenu)" v-on:click="btnTopMenuClick(parentMenu, $event)"
+                  :target="getTarget(parentMenu)" v-html="parentMenu.text"></a>
                   <ul v-if="parentMenu.hasChildren" class="submenu">
                     <li v-for="childMenu in parentMenu.children">
-                      <a :href="getHref(childMenu)" v-on:click="btnTopMenuClick(childMenu, $event)" :target="getTarget(childMenu)" v-html="childMenu.text"></a>
+                      <a :href="getHref(childMenu)" v-on:click="btnTopMenuClick(childMenu, $event)"
+                      :target="getTarget(childMenu)" v-html="childMenu.text"></a>
                     </li>
                   </ul>
                 </li>
@@ -58,7 +63,8 @@
                       <hr /> {{ newVersion.releaseNotes }}
                       <hr />
                       <div class="text-center">
-                        <button href="javascript:;" onclick="location.href = 'pageUpdateSystem.aspx'" class="btn btn-warning btn-block">立即升级</button>
+                        <button href="javascript:;" onclick="location.href = 'pageUpdateSystem.aspx'"
+                        class="btn btn-warning btn-block">立即升级</button>
                       </div>
                     </p>
                   </div>
@@ -67,24 +73,32 @@
               <li v-if="$siteId > 0" class="dropdown">
                 <a href="javascript:;" onclick="openPageCreateStatus()">
                   <i class="ion-wand"></i>
-                  <span v-if="pendingCount > 0" class="badge badge-xs badge-warning" style="right: 0;">{{pendingCount}}</span>
+                  <span v-if="pendingCount > 0" class="badge badge-xs badge-warning"
+                  style="right: 0;">{{pendingCount}}</span>
                 </a>
               </li>
               <li class="list-inline-item dropdown notification-list has-submenu">
                 <a class="nav-link nav-user" href="javascript:;">
-                  <img style="height: 36px;width: 36px;" :src="local.avatarUrl ? local.avatarUrl : 'assets/images/default_avatar.png'"
-                    class="rounded-circle">
+                  <img style="height: 36px;width: 36px;"
+                  :src="local.avatarUrl ? local.avatarUrl : 'assets/images/default_avatar.png'"
+                  class="rounded-circle">
                 </a>
                 <ul class="submenu">
-                  <li><a :href="'settings/adminView.cshtml?pageType=user&userId=' + local.userId" target="right">{{local.level}}：{{local.userName}}</a></li>
-                  <li><a :href="'settings/adminProfile.cshtml?pageType=user&userId=' + local.userId" target="right">修改资料</a></li>
-                  <li><a :href="'settings/adminPassword.cshtml?pageType=user&userId=' + local.userId" target="right">更改密码</a></li>
+                  <li><a :href="'settings/adminView.cshtml?pageType=user&userId=' + local.userId"
+                    target="right">{{local.level}}：{{local.userName}}</a></li>
+                  <li><a :href="'settings/adminProfile.cshtml?pageType=user&userId=' + local.userId"
+                    target="right">修改资料</a></li>
+                  <li><a :href="'settings/adminPassword.cshtml?pageType=user&userId=' + local.userId"
+                    target="right">更改密码</a></li>
                   <li><a href="pageLogout.cshtml">退出系统</a></li>
                 </ul>
               </li>
               <li>
-                <form v-if="$siteId > 0" id="search" class="navbar-left app-search float-left" :action="'cms/pageContentSearch.aspx?siteId=' + $siteId"
-                  target="right" method="get">
+                <div style="margin-top:20px;color:white">{{local.displayName}}</div>
+              </li>
+              <li>
+                <form v-if="$siteId > 0" id="search" class="navbar-left app-search float-left"
+                :action="'cms/pageContentSearch.aspx?siteId=' + $siteId" target="right" method="get">
                   <input name="siteId" type="hidden" :value="$siteId">
                   <input name="keyword" type="text" placeholder="内容搜索..." class="form-control">
                   <a href="javascript:;" onclick="$('#search').submit();">
@@ -103,30 +117,35 @@
             <ul>
               <li v-if="siteMenus.length > 0" class="text-muted menu-title">站点管理</li>
               <li v-for="siteMenu in siteMenus" class="has_sub">
-                <a :href="getHref(siteMenu)" v-on:click="btnLeftMenuClick(siteMenu)" :target="getTarget(siteMenu)" :class="{'subdrop': siteMenu === activeParentMenu}">
+                <a :href="getHref(siteMenu)" v-on:click="btnLeftMenuClick(siteMenu)" :target="getTarget(siteMenu)"
+                :class="{'subdrop': siteMenu === activeParentMenu}">
                   <i :class="(siteMenu.iconClass ? siteMenu.iconClass : 'ion-star')"></i>
                   <span v-html="siteMenu.text"></span>
                   <span v-if="siteMenu.hasChildren" class="menu-arrow"></span>
                 </a>
                 <ul v-if="siteMenu.hasChildren" class="list-unstyled" v-show="siteMenu === activeParentMenu">
                   <li v-for="childMenu in siteMenu.children" :class="{'active': childMenu === activeChildMenu}">
-                    <a :href="getHref(childMenu)" :target="getTarget(childMenu)" v-on:click="btnLeftMenuClick(childMenu)">
+                    <a :href="getHref(childMenu)" :target="getTarget(childMenu)"
+                    v-on:click="btnLeftMenuClick(childMenu)">
                       <i :class="childMenu.iconClass"></i> <span v-html="childMenu.text"></span> </a>
                   </li>
                 </ul>
               </li>
-              <li v-if="pluginMenus.length > 0" class="text-muted menu-title"> 站点插件 <a v-if="updatePackages > 0" href="plugins/manage.cshtml?pageType=4" class="badge badge-warning" target="right">{{updatePackages}}</a>
+              <li v-if="pluginMenus.length > 0" class="text-muted menu-title"> 站点插件 <a v-if="updatePackages > 0"
+                href="plugins/manage.cshtml?pageType=4" class="badge badge-warning"
+                target="right">{{updatePackages}}</a>
               </li>
               <li v-for="pluginMenu in pluginMenus" class="has_sub">
                 <a :href="getHref(pluginMenu)" v-on:click="btnLeftMenuClick(pluginMenu)" :target="getTarget(pluginMenu)"
-                  :class="{'subdrop': pluginMenu === activeParentMenu}">
+                :class="{'subdrop': pluginMenu === activeParentMenu}">
                   <i :class="(pluginMenu.iconClass ? pluginMenu.iconClass : 'ion-star')"></i>
                   <span v-html="pluginMenu.text"></span>
                   <span v-if="pluginMenu.hasChildren" class="menu-arrow"></span>
                 </a>
                 <ul v-if="pluginMenu.hasChildren" class="list-unstyled" v-show="pluginMenu === activeParentMenu">
                   <li v-for="childMenu in pluginMenu.children" :class="{'active': childMenu === activeChildMenu}">
-                    <a :href="getHref(childMenu)" :target="getTarget(childMenu)" v-on:click="btnLeftMenuClick(childMenu)">
+                    <a :href="getHref(childMenu)" :target="getTarget(childMenu)"
+                    v-on:click="btnLeftMenuClick(childMenu)">
                       <i :class="childMenu.iconClass"></i> <span v-html="childMenu.text"></span> </a>
                   </li>
                 </ul>
@@ -134,15 +153,16 @@
               <template v-if="!isDesktop && isMobileMenu" v-for="topMenu in topMenus">
                 <li class="text-muted menu-title" v-html="topMenu.text"></li>
                 <li v-for="parentMenu in topMenu.children" class="has_sub">
-                  <a :href="getHref(parentMenu)" v-on:click="btnLeftMenuClick(parentMenu)" :target="getTarget(parentMenu)"
-                    :class="{'subdrop': parentMenu === activeParentMenu}">
+                  <a :href="getHref(parentMenu)" v-on:click="btnLeftMenuClick(parentMenu)"
+                  :target="getTarget(parentMenu)" :class="{'subdrop': parentMenu === activeParentMenu}">
                     <i :class="(parentMenu.iconClass ? parentMenu.iconClass : 'ion-star')"></i>
                     <span v-html="parentMenu.text"></span>
                     <span v-if="parentMenu.hasChildren" class="menu-arrow"></span>
                   </a>
                   <ul v-if="parentMenu.hasChildren" class="list-unstyled" v-show="parentMenu === activeParentMenu">
                     <li v-for="childMenu in parentMenu.children" :class="{'active': childMenu === activeChildMenu}">
-                      <a :href="getHref(childMenu)" :target="getTarget(childMenu)" v-on:click="btnLeftMenuClick(childMenu)">
+                      <a :href="getHref(childMenu)" :target="getTarget(childMenu)"
+                      v-on:click="btnLeftMenuClick(childMenu)">
                         <i :class="childMenu.iconClass"></i> <span v-html="childMenu.text"></span> </a>
                     </li>
                   </ul>
@@ -157,11 +177,13 @@
         </div>
       </div>
       <div class="content-page" id="content" :style="{marginLeft: (isDesktop ? 200 : 0) + 'px'}">
-        <iframe id="frmMain" frameborder="0" id="right" name="right" :src="defaultPageUrl" :style="{width: (winWidth - (isDesktop ? 200 : 0)) + 'px', height: (winHeight - 62) + 'px'}"></iframe>
+        <iframe id="frmMain" frameborder="0" id="right" name="right" :src="defaultPageUrl"
+        :style="{width: (winWidth - (isDesktop ? 200 : 0)) + 'px', height: (winHeight - 62) + 'px'}"></iframe>
       </div>
     </template>
     <template v-else-if="pageAlert">
-      <div class="alert m-3" v-bind:class="{ 'alert-warning': pageAlert.type === 'warning', 'alert-success': pageAlert.type === 'success', 'alert-danger': pageAlert.type === 'danger' }">
+      <div class="alert m-3"
+      v-bind:class="{ 'alert-warning': pageAlert.type === 'warning', 'alert-success': pageAlert.type === 'success', 'alert-danger': pageAlert.type === 'danger' }">
         <button v-on:click="pageAlert = null" class="close" data-dismiss="alert">×</button>
         <span v-html="pageAlert.html"></span>
       </div>

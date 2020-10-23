@@ -716,15 +716,15 @@ namespace SiteServer.CMS.Core
 	            listControl.Items.Add(listItem);
 	        }
 
-	        if (checkContentLevel == 0 || checkContentLevel == 1)
-	        {
-	            listItem = new ListItem(Level1.Pass1, LevelInt.Pass1.ToString())
-	            {
-	                Enabled = isChecked
-	            };
-	            listControl.Items.Add(listItem);
-	        }
-	        else if (checkContentLevel == 2)
+			if (checkContentLevel == 0 || checkContentLevel == 1)
+			{
+				listItem = new ListItem(Level1.Pass1, LevelInt.Pass1.ToString())
+				{
+					Enabled = isChecked
+				};
+				listControl.Items.Add(listItem);
+			}
+			else if (checkContentLevel == 2)
 	        {
 	            listItem = new ListItem(Level2.Pass1, LevelInt.Pass1.ToString())
 	            {
