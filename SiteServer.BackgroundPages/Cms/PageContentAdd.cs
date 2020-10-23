@@ -122,7 +122,8 @@ namespace SiteServer.BackgroundPages.Cms
                 CblContentAttributes.Items.Add(new ListItem("置顶", ContentAttribute.IsTop));
                 CblContentAttributes.Items.Add(new ListItem("推荐", ContentAttribute.IsRecommend));
                 CblContentAttributes.Items.Add(new ListItem("热点", ContentAttribute.IsHot));
-                CblContentAttributes.Items.Add(new ListItem("醒目", ContentAttribute.IsColor));
+                // 取消醒目字段
+                // CblContentAttributes.Items.Add(new ListItem("醒目", ContentAttribute.IsColor));
                 TbAddDate.DateTime = DateTime.Now;
                 TbAddDate.Now = true;
 
@@ -177,7 +178,10 @@ namespace SiteServer.BackgroundPages.Cms
 
                         TbTitle.Text = formCollection[ContentAttribute.Title];
                     }
-
+                    // 设置 推荐为默认
+                    var list = new List<string>();
+                    list.Add(ContentAttribute.IsRecommend);
+                    ControlUtils.SelectMultiItems(CblContentAttributes, list);
                     AcAttributes.Attributes = attributes;
 
                     //ControlUtils.SelectSingleItem(RblContentLevel, SiteInfo.Additional.CheckContentDefaultLevel.ToString());
