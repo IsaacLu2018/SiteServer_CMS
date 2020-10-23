@@ -418,7 +418,10 @@ namespace SiteServer.CMS.Core
 	        {
 	            checkedLevel = checkContentLevel;
 	        }
-
+			if (isChecked == false && checkedLevel == 0) {
+				isChecked = true;
+				checkedLevel = 5;
+			}
 	        listControl.Items.Add(new ListItem(Level.All, LevelInt.All.ToString()));
 	        listControl.Items.Add(new ListItem(Level.CaoGao, LevelInt.CaoGao.ToString()));
             listControl.Items.Add(new ListItem(Level.DaiShen, LevelInt.DaiShen.ToString()));

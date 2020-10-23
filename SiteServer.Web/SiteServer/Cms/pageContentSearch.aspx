@@ -8,6 +8,8 @@
       <!--#include file="../inc/head.html"-->
       <script type="text/javascript">
         $(document).ready(function () {
+          const contents = document.getElementById('contents');
+          console.log('contents', contents);
           loopRows(document.getElementById('contents'), function (cur) {
             cur.onclick = chkSelect;
           });
