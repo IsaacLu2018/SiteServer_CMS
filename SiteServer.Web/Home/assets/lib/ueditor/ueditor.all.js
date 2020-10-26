@@ -26106,7 +26106,7 @@ UE.ui = baidu.editor.ui = {};
             var me = this.editor,
                 opt = me.options.autotypeset,
                 lang = me.getLang("autoTypeSet");
-
+                console.log('me home', me);
             var textAlignInputName = 'textAlignValue' + me.uid,
                 imageBlockInputName = 'imageBlockLineValue' + me.uid,
                 symbolConverInputName = 'symbolConverValue' + me.uid;

@@ -54,16 +54,19 @@ namespace SiteServer.Utils
 
         public static string ClearFontSize(string html)
         {
+            string fontSize = "font-size:24px;";
             if (string.IsNullOrEmpty(html)) return string.Empty;
-            html = RegexUtils.Replace(@"font-size:\w+;", html, string.Empty);
+            html = RegexUtils.Replace(@"font-size:\w+;", html, fontSize);
             return html;
         }
 
         public static string ClearFontFamily(string html)
         {
+            string sumSim = "font-family: 宋体, SimSun;";
+            // sumSim = string.Empty;
             if (string.IsNullOrEmpty(html)) return string.Empty;
-            html = RegexUtils.Replace(@"font-family:'\w+';", html, string.Empty);
-            html = RegexUtils.Replace(@"font-family:\w+;", html, string.Empty);
+            html = RegexUtils.Replace(@"font-family:'\w+';", html, sumSim);
+            html = RegexUtils.Replace(@"font-family:\w+;", html, sumSim);
             return html;
         }
 
