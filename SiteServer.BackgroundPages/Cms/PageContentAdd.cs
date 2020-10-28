@@ -476,6 +476,243 @@ namespace SiteServer.BackgroundPages.Cms
             PageUtils.Redirect(redirectUrl);
         }
 
+        public  void Submit_Draft_OnClick(object sender, EventArgs e)
+        {
+            if (!Page.IsPostBack || !Page.IsValid) return;
+            // 设置保存状态为草稿
+            string draftStatus = "-99";
+            var contentId = AuthRequest.GetQueryInt("id");
+            var redirectUrl = string.Empty;
+
+            if (contentId == 0)
+            {
+                try
+                {
+                    var dict = BackgroundInputTypeParser.SaveAttributes(SiteInfo, _styleInfoList, Request.Form, ContentAttribute.AllAttributes.Value);
+
+                    var contentInfo = new ContentInfo(dict)
+                    {
+                        ChannelId = _channelInfo.Id,
+                        SiteId = SiteId,
+                        AddUserName = AuthRequest.AdminName,
+                        AdminId = AuthRequest.AdminId,
+                        LastEditDate = DateTime.Now,
+                        GroupNameCollection = ControlUtils.SelectedItemsValueToStringCollection(CblContentGroups.Items),
+                        Title = TbTitle.Text
+                    };
+
+                    var formatString = TranslateUtils.ToBool(Request.Form[ContentAttribute.Title + "_formatStrong"]);
+                    var formatEm = TranslateUtils.ToBool(Request.Form[ContentAttribute.Title + "_formatEM"]);
+                    var formatU = TranslateUtils.ToBool(Request.Form[ContentAttribute.Title + "_formatU"]);
+                    var formatColor = Request.Form[ContentAttribute.Title + "_formatColor"];
+                    var theFormatString = ContentUtility.GetTitleFormatString(formatString, formatEm, formatU, formatColor);
+                    contentInfo.Set(ContentAttribute.GetFormatStringAttributeName(ContentAttribute.Title), theFormatString);
+
+                    contentInfo.LastEditUserName = contentInfo.AddUserName;
+
+                    foreach (ListItem listItem in CblContentAttributes.Items)
+                    {
+                        var value = listItem.Selected.ToString();
+                        var attributeName = listItem.Value;
+                        contentInfo.Set(attributeName, value);
+                    }
+                    contentInfo.LinkUrl = TbLinkUrl.Text;
+                    contentInfo.AddDate = TbAddDate.DateTime;
+
+                    contentInfo.CheckedLevel = TranslateUtils.ToIntWithNagetive(draftStatus);
+
+                    contentInfo.IsChecked = contentInfo.CheckedLevel >= SiteInfo.Additional.CheckContentLevel;
+                    contentInfo.Tags = TranslateUtils.ObjectCollectionToString(TagUtils.ParseTagsString(TbTags.Text), " ");
+
+                    foreach (var service in PluginManager.Services)
+                    {
+                        try
+                        {
+                            service.OnContentFormSubmit(new ContentFormSubmitEventArgs(SiteId, _channelInfo.Id,
+                                contentInfo.Id, TranslateUtils.ToDictionary(Request.Form), contentInfo));
+                        }
+                        catch (Exception ex)
+                        {
+                            LogUtils.AddErrorLog(service.PluginId, ex, nameof(IService.ContentFormSubmit));
+                        }
+                    }
+
+
+                    //判断是不是有审核权限
+                    int checkedLevelOfUser;
+                    var isCheckedOfUser = CheckManager.GetUserCheckLevel(AuthRequest.AdminPermissionsImpl, SiteInfo, contentInfo.ChannelId, out checkedLevelOfUser);
+                    if (CheckManager.IsCheckable(contentInfo.IsChecked, contentInfo.CheckedLevel, isCheckedOfUser, checkedLevelOfUser))
+                    {
+                        if (contentInfo.IsChecked)
+                        {
+                            contentInfo.CheckedLevel = 0;
+                        }
+
+                        contentInfo.Set(ContentAttribute.CheckUserName, AuthRequest.AdminName);
+                        contentInfo.Set(ContentAttribute.CheckDate, DateUtils.GetDateAndTimeString(DateTime.Now));
+                        contentInfo.Set(ContentAttribute.CheckReasons, string.Empty);
+                    }
+
+                    contentInfo.Id = DataProvider.ContentDao.Insert(_tableName, SiteInfo, _channelInfo, contentInfo);
+
+                    TagUtils.UpdateTags(string.Empty, TbTags.Text, SiteId, contentInfo.Id);
+
+                    CreateManager.CreateContent(SiteId, _channelInfo.Id, contentInfo.Id);
+                    CreateManager.TriggerContentChangedEvent(SiteId, _channelInfo.Id);
+
+                    AuthRequest.AddSiteLog(SiteId, _channelInfo.Id, contentInfo.Id, "添加内容",
+                        $"栏目:{ChannelManager.GetChannelNameNavigation(SiteId, contentInfo.ChannelId)},内容标题:{contentInfo.Title}");
+
+                    ContentUtility.Translate(SiteInfo, _channelInfo.Id, contentInfo.Id, Request.Form["translateCollection"], ETranslateContentTypeUtils.GetEnumType(DdlTranslateType.SelectedValue), AuthRequest.AdminName);
+
+                    redirectUrl = PageContentAddAfter.GetRedirectUrl(SiteId, _channelInfo.Id, contentInfo.Id,
+                        ReturnUrl);
+                }
+                catch (Exception ex)
+                {
+                    LogUtils.AddErrorLog(ex);
+                    FailMessage($"内容添加失败：{ex.Message}");
+                }
+            }
+            else
+            {
+                var contentInfo = ContentManager.GetContentInfo(SiteInfo, _channelInfo, contentId);
+                try
+                {
+                    contentInfo.LastEditUserName = AuthRequest.AdminName;
+                    contentInfo.LastEditDate = DateTime.Now;
+
+                    var dict = BackgroundInputTypeParser.SaveAttributes(SiteInfo, _styleInfoList, Request.Form, ContentAttribute.AllAttributes.Value);
+                    contentInfo.Load(dict);
+
+                    contentInfo.GroupNameCollection = ControlUtils.SelectedItemsValueToStringCollection(CblContentGroups.Items);
+
+                    contentInfo.Title = TbTitle.Text;
+                    var formatString = TranslateUtils.ToBool(Request.Form[ContentAttribute.Title + "_formatStrong"]);
+                    var formatEm = TranslateUtils.ToBool(Request.Form[ContentAttribute.Title + "_formatEM"]);
+                    var formatU = TranslateUtils.ToBool(Request.Form[ContentAttribute.Title + "_formatU"]);
+                    var formatColor = Request.Form[ContentAttribute.Title + "_formatColor"];
+                    var theFormatString = ContentUtility.GetTitleFormatString(formatString, formatEm, formatU, formatColor);
+                    contentInfo.Set(ContentAttribute.GetFormatStringAttributeName(ContentAttribute.Title), theFormatString);
+                    foreach (ListItem listItem in CblContentAttributes.Items)
+                    {
+                        var value = listItem.Selected.ToString();
+                        var attributeName = listItem.Value;
+                        contentInfo.Set(attributeName, value);
+                    }
+                    contentInfo.LinkUrl = TbLinkUrl.Text;
+                    contentInfo.AddDate = TbAddDate.DateTime;
+
+                    var checkedLevel = TranslateUtils.ToIntWithNagetive(draftStatus);
+                    contentInfo.IsChecked = checkedLevel >= SiteInfo.Additional.CheckContentLevel;
+                    contentInfo.CheckedLevel = checkedLevel;
+
+                    TagUtils.UpdateTags(contentInfo.Tags, TbTags.Text, SiteId, contentId);
+                    contentInfo.Tags = TranslateUtils.ObjectCollectionToString(TagUtils.ParseTagsString(TbTags.Text), " ");
+
+                    foreach (var service in PluginManager.Services)
+                    {
+                        try
+                        {
+                            service.OnContentFormSubmit(new ContentFormSubmitEventArgs(SiteId, _channelInfo.Id,
+                                contentInfo.Id, TranslateUtils.ToDictionary(Request.Form), contentInfo));
+                        }
+                        catch (Exception ex)
+                        {
+                            LogUtils.AddErrorLog(service.PluginId, ex, nameof(IService.ContentFormSubmit));
+                        }
+                    }
+
+                    DataProvider.ContentDao.Update(SiteInfo, _channelInfo, contentInfo);
+
+                    ContentUtility.Translate(SiteInfo, _channelInfo.Id, contentInfo.Id, Request.Form["translateCollection"], ETranslateContentTypeUtils.GetEnumType(DdlTranslateType.SelectedValue), AuthRequest.AdminName);
+
+                    CreateManager.CreateContent(SiteId, _channelInfo.Id, contentId);
+                    CreateManager.TriggerContentChangedEvent(SiteId, _channelInfo.Id);
+
+                    AuthRequest.AddSiteLog(SiteId, _channelInfo.Id, contentId, "修改内容",
+                        $"栏目:{ChannelManager.GetChannelNameNavigation(SiteId, contentInfo.ChannelId)},内容标题:{contentInfo.Title}");
+
+                    redirectUrl = ReturnUrl;
+
+                    //更新引用该内容的信息
+                    //如果不是异步自动保存，那么需要将引用此内容的content修改
+                    //var sourceContentIdList = new List<int>
+                    //{
+                    //    contentInfo.Id
+                    //};
+                    //var tableList = DataProvider.TableDao.GetTableCollectionInfoListCreatedInDb();
+                    //foreach (var table in tableList)
+                    //{
+                    //    var targetContentIdList = DataProvider.ContentDao.GetReferenceIdList(table.TableName, sourceContentIdList);
+                    //    foreach (var targetContentId in targetContentIdList)
+                    //    {
+                    //        var targetContentInfo = DataProvider.ContentDao.GetContentInfo(table.TableName, targetContentId);
+                    //        if (targetContentInfo == null || targetContentInfo.GetString(ContentAttribute.TranslateContentType) != ETranslateContentType.ReferenceContent.ToString()) continue;
+
+                    //        contentInfo.Id = targetContentId;
+                    //        contentInfo.SiteId = targetContentInfo.SiteId;
+                    //        contentInfo.ChannelId = targetContentInfo.ChannelId;
+                    //        contentInfo.SourceId = targetContentInfo.SourceId;
+                    //        contentInfo.ReferenceId = targetContentInfo.ReferenceId;
+                    //        contentInfo.Taxis = targetContentInfo.Taxis;
+                    //        contentInfo.Set(ContentAttribute.TranslateContentType, targetContentInfo.GetString(ContentAttribute.TranslateContentType));
+                    //        DataProvider.ContentDao.Update(table.TableName, contentInfo);
+
+                    //        //资源：图片，文件，视频
+                    //        var targetSiteInfo = SiteManager.GetSiteInfo(targetContentInfo.SiteId);
+                    //        var bgContentInfo = contentInfo as BackgroundContentInfo;
+                    //        var bgTargetContentInfo = targetContentInfo as BackgroundContentInfo;
+                    //        if (bgTargetContentInfo != null && bgContentInfo != null)
+                    //        {
+                    //            if (bgContentInfo.ImageUrl != bgTargetContentInfo.ImageUrl)
+                    //            {
+                    //                //修改图片
+                    //                var sourceImageUrl = PathUtility.MapPath(SiteInfo, bgContentInfo.ImageUrl);
+                    //                CopyReferenceFiles(targetSiteInfo, sourceImageUrl);
+                    //            }
+                    //            else if (bgContentInfo.GetString(ContentAttribute.GetExtendAttributeName(BackgroundContentAttribute.ImageUrl)) != bgTargetContentInfo.GetString(ContentAttribute.GetExtendAttributeName(BackgroundContentAttribute.ImageUrl)))
+                    //            {
+                    //                var sourceImageUrls = TranslateUtils.StringCollectionToStringList(bgContentInfo.GetString(ContentAttribute.GetExtendAttributeName(BackgroundContentAttribute.ImageUrl)));
+
+                    //                foreach (string imageUrl in sourceImageUrls)
+                    //                {
+                    //                    var sourceImageUrl = PathUtility.MapPath(SiteInfo, imageUrl);
+                    //                    CopyReferenceFiles(targetSiteInfo, sourceImageUrl);
+                    //                }
+                    //            }
+                    //            if (bgContentInfo.FileUrl != bgTargetContentInfo.FileUrl)
+                    //            {
+                    //                //修改附件
+                    //                var sourceFileUrl = PathUtility.MapPath(SiteInfo, bgContentInfo.FileUrl);
+                    //                CopyReferenceFiles(targetSiteInfo, sourceFileUrl);
+
+                    //            }
+                    //            else if (bgContentInfo.GetString(ContentAttribute.GetExtendAttributeName(BackgroundContentAttribute.FileUrl)) != bgTargetContentInfo.GetString(ContentAttribute.GetExtendAttributeName(BackgroundContentAttribute.FileUrl)))
+                    //            {
+                    //                var sourceFileUrls = TranslateUtils.StringCollectionToStringList(bgContentInfo.GetString(ContentAttribute.GetExtendAttributeName(BackgroundContentAttribute.FileUrl)));
+
+                    //                foreach (var fileUrl in sourceFileUrls)
+                    //                {
+                    //                    var sourceFileUrl = PathUtility.MapPath(SiteInfo, fileUrl);
+                    //                    CopyReferenceFiles(targetSiteInfo, sourceFileUrl);
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                }
+                catch (Exception ex)
+                {
+                    LogUtils.AddErrorLog(ex);
+                    FailMessage($"内容修改失败：{ex.Message}");
+                    return;
+                }
+            }
+
+            PageUtils.Redirect(redirectUrl);
+        }
+
         private bool IsPermissions(int contentId)
         {
             if (contentId == 0)

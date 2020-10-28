@@ -10561,7 +10561,7 @@ UE.plugins['autotypeset'] = function(){
              //font-size
             if(opt.clearFontSize && ci.style.fontSize){
                 //domUtils.removeStyle(ci,'font-size');
-                ci.style.cssText=ci.style.cssText.replace(new RegExp("font-size"+"[^:]*:[^;]+;?","ig"),"font-size: 20px;");
+                ci.style.cssText=ci.style.cssText.replace(new RegExp("font-size"+"[^:]*:[^;]+;?","ig"),"font-size: 18px;");
                 ci.style.cssText=ci.style.cssText.replace(new RegExp("line-height"+"[^:]*:[^;]+;?","ig"),"line-height: 1.75em;");
                 ci.style.cssText=ci.style.cssText.replace(new RegExp("margin"+"[^:]*:[^;]+;?","ig"),"");
                 removeNotAttributeSpan(ci);

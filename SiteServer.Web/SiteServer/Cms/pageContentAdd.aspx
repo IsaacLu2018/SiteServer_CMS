@@ -217,6 +217,8 @@
       <div class="text-center">
         <asp:Button class="btn btn-primary m-r-5" itemIndex="1" ID="BtnSubmit" Text="确 定" OnClick="Submit_OnClick" runat="server"
         />
+        <asp:Button class="btn btn-primary m-r-5" itemIndex="2" ID="BtnDraftSubmit" Text="保存为草稿" OnClick="Submit_Draft_OnClick" runat="server"
+        />
         <input class="btn btn-success m-r-5" type="button" onClick="preview();" value="预 览" />
         <input class="btn" type="button" onclick="location.href='<%=ReturnUrl%>';return false;" value="返 回" />
         <small class="form-text text-muted m-t-5">
