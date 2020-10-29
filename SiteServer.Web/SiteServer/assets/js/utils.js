@@ -1,15 +1,15 @@
 var $api = axios.create({
-  baseURL: window.apiUrl || '../api',
-  withCredentials: true
+  baseURL: window.apiUrl || "../api",
+  withCredentials: true,
 });
 
-var $urlCloud = 'https://sscms.com';
-var $urlCloudDl = 'https://dl.sscms.com';
-var $urlCloudDemo = 'https://demo.sscms.com';
-var $urlCloudApi = 'https://api.sscms.com';
+var $urlCloud = "https://sscms.com";
+var $urlCloudDl = "https://dl.sscms.com";
+var $urlCloudDemo = "https://demo.sscms.com";
+var $urlCloudApi = "https://api.sscms.com";
 var $apiCloud = axios.create({
-  baseURL: $urlCloudApi + '/v6',
-  withCredentials: true
+  baseURL: $urlCloudApi + "/v6",
+  withCredentials: true,
 });
 
 var utils = {
@@ -17,25 +17,26 @@ var utils = {
     if (!config) return false;
 
     alert({
-        title: config.title,
-        text: config.text,
-        type: 'warning',
-        confirmButtonText: config.button || '删 除',
-        confirmButtonClass: 'btn btn-danger',
-        showCancelButton: true,
-        cancelButtonText: '取 消'
-      })
-      .then(function (result) {
-        if (result.value) {
-          config.callback();
-        }
-      });
+      title: config.title,
+      text: config.text,
+      type: "warning",
+      confirmButtonText: config.button || "删 除",
+      confirmButtonClass: "btn btn-danger",
+      showCancelButton: true,
+      cancelButtonText: "取 消",
+    }).then(function (result) {
+      if (result.value) {
+        config.callback();
+      }
+    });
 
     return false;
   },
-  
+
   getQueryString: function (name) {
-    var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+    var result = location.search.match(
+      new RegExp("[?&]" + name + "=([^&]+)", "i")
+    );
     if (!result || result.length < 1) {
       return "";
     }
@@ -53,21 +54,25 @@ var utils = {
     }
 
     app.$notify.error({
-      title: '错误',
-      message: message
+      title: "错误",
+      message: message,
     });
   },
 
   getQueryBoolean: function (name) {
-    var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+    var result = location.search.match(
+      new RegExp("[?&]" + name + "=([^&]+)", "i")
+    );
     if (!result || result.length < 1) {
       return false;
     }
-    return result[1] === 'true' || result[1] === 'True';
+    return result[1] === "true" || result[1] === "True";
   },
 
   getQueryInt: function (name) {
-    var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+    var result = location.search.match(
+      new RegExp("[?&]" + name + "=([^&]+)", "i")
+    );
     if (!result || result.length < 1) {
       return 0;
     }
@@ -86,14 +91,14 @@ var utils = {
 
     return {
       type: "danger",
-      html: message
+      html: message,
     };
   },
 
   loading: function (isLoading) {
     if (isLoading) {
       return layer.load(1, {
-        shade: [0.2, '#000']
+        shade: [0.2, "#000"],
       });
     } else {
       layer.close(layer.index);
@@ -124,11 +129,11 @@ var utils = {
       type: 2,
       btn: null,
       title: config.title,
-      area: [config.width + 'px', config.height + 'px'],
+      area: [config.width + "px", config.height + "px"],
       maxmin: true,
       resize: true,
       shadeClose: true,
-      content: config.url
+      content: config.url,
     });
 
     if (config.max) {
@@ -136,5 +141,49 @@ var utils = {
     }
 
     return false;
-  }
+  },
+  createPreview: function (data) {
+    console.log("data", data);
+    const url = "/api" + data.getInfoUrl;
+    const previewUrl = data.url;
+    // 先调用接口.../v1/contents/1/2/25
+    // 直接用cookie访问 不需要APIKEY
+    // 直接提交表单/
+    axios.get(url, {}).then(function (response) {
+      console.log("response", response);
+      const {
+        title,
+        addDate,
+        auditor,
+        author,
+        content,
+        hits,
+        poster,
+        source,
+        imageUrl,
+      } = response.data.value;
+      console.log('previewUrl', previewUrl);
+      let params = new URLSearchParams();
+      params.append("ImageUrl", imageUrl);
+      params.append("TbAddDate", addDate);
+      params.append("Author", author);
+      params.append("Source", source);
+      params.append("auditor", auditor);
+      params.append("poster", poster);
+      params.append("Content", content);
+      params.append("Hits", hits);
+      params.append("TbTitle", title);
+
+      console.log("params", params);
+      axios({
+        method: "post",
+        url: previewUrl,
+        data: params,
+      }).then(function (res) {
+        if(res.data.previewUrl){
+          window.open(res.data.previewUrl);
+        }
+      });
+    });
+  },
 };

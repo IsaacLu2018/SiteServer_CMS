@@ -10,6 +10,10 @@ using SiteServer.CMS.Model;
 using SiteServer.CMS.Model.Attributes;
 using SiteServer.CMS.Model.Enumerations;
 using SiteServer.CMS.Plugin.Impl;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System;
+using System.Web.UI.WebControls;
 
 namespace SiteServer.BackgroundPages.Core
 {
@@ -32,8 +36,10 @@ namespace SiteServer.BackgroundPages.Core
                 var layerUrl =
                     $@"contentsLayerView.cshtml?siteId={siteInfo.Id}&channelId={-contentInfo.ChannelId}&contentId={contentInfo.Id}";
                 //ModalContentView.GetOpenWindowString(siteInfo.Id, contentInfo.ChannelId, contentInfo.Id, pageUrl)
+                string previewUrl = $"/SiteServer/cms/pageContentAddHandler.ashx?siteId={siteInfo.Id}&channelId={contentInfo.ChannelId}&contentId={contentInfo.Id}";
+                string onClickStr =   $@"utils.createPreview({{Tbtitle: '{contentInfo.Title}', url: '{previewUrl}', ImageUrl: '{contentInfo.ImageUrl}', Author:'{contentInfo.Author}',Source:'{ contentInfo.Source}',Content:'{contentInfo.Content}',auditor:'auditor',poster:'poster',getInfoUrl:'/v1/contents/{siteInfo.Id}/{contentInfo.ChannelId}/{contentInfo.Id}'}})";
                 url =
-                    $@"<a href=""javascript:;"" onclick=""{LayerUtils.GetOpenScript2("查看内容", layerUrl)}"">{displayString}</a>";
+                    $@"<a href=""javascript:;"" onclick=""{onClickStr}"">{displayString}</a>";
             }
 
             var image = string.Empty;
@@ -83,6 +89,37 @@ namespace SiteServer.BackgroundPages.Core
             }
             return url + image;
         }
+
+        public static async Task PostAsync()
+        {
+            string content = "<p style=\"-webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-size-adjust: none; box-sizing: border-box; font-family: 宋体, SimSun; font-size: 18px; line-height: 1.75em; word-spacing: 0.05rem; color: rgb(52, 73, 94); white-space: normal; background-color: rgb(255, 255, 255); text-indent: 2em; text-align: left;\">欢迎来到 SiteServer CMS 常见问题速查手册。</p><p style=\"-webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-size-adjust: none; box-sizing: border-box; font-family: 宋体, SimSun; font-size: 18px; line-height: 1.75em; word-spacing: 0.05rem; color: rgb(52, 73, 94); white-space: normal; background-color: rgb(255, 255, 255); text-indent: 2em; text-align: left;\">本指南旨在将 SiteServer CMS 常见问题整合到一个中心位置，以供快速参考。</p><p style=\"-webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-size-adjust: none; box-sizing: border-box; font-family: 宋体, SimSun; font-size: 18px; line-height: 1.75em; word-spacing: 0.05rem; color: rgb(52, 73, 94); white-space: normal; background-color: rgb(255, 255, 255); text-indent: 2em; text-align: left;\">如果你遇到的问题不在此FAQ手册中，请到&nbsp;<a href=\"https://github.com/siteserver/cms/issues\" target=\"_blank\" rel=\"noopener\" style=\"-webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-size-adjust: none; box-sizing: border-box; font-weight: 600;\">SiteServer CMS 论坛</a>&nbsp;中搜索，如果没有答案，请发起提问，我们技术人员将及时回复。</p><p style=\"-webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-size-adjust: none; box-sizing: border-box; font-family: 宋体, SimSun; font-size: 18px; line-height: 1.75em; word-spacing: 0.05rem; color: rgb(52, 73, 94); white-space: normal; background-color: rgb(255, 255, 255); text-indent: 2em; text-align: left;\">对于经常遇到的提问，我们将总结出来放到此手册中，，，我的天。</p><p><br style=\"text-indent: 2em; text-align: left;\"/></p>";
+            using (var client = new HttpClient())
+            {
+                var multipartFormDataContent = new MultipartFormDataContent();
+                multipartFormDataContent.Add(new StringContent("Title_formatStrong"), "false");
+                multipartFormDataContent.Add(new StringContent("Title_formatEM"), "false");
+                multipartFormDataContent.Add(new StringContent("ImageUrl_Extend"), "@/upload/images/2020/10/f8b645c50f6b27b3.png");
+                multipartFormDataContent.Add(new StringContent("ImageUrl"), "@/upload/images/2020/10/d1b3dd1f34099abe.png");
+                multipartFormDataContent.Add(new StringContent("Source"), "Source");
+                multipartFormDataContent.Add(new StringContent("auditor"), "auditor");
+                multipartFormDataContent.Add(new StringContent("poster"), "poster");
+                multipartFormDataContent.Add(new StringContent("Source"), "false");
+                multipartFormDataContent.Add(new StringContent("Content"), "content");
+                multipartFormDataContent.Add(new StringContent("RblContentLevel"), "0");
+                multipartFormDataContent.Add(new StringContent("Hits"), "120");
+                string boundary = string.Format("--{0}", DateTime.Now.Ticks.ToString("x"));
+                multipartFormDataContent.Headers.Add("ContentType", $"multipart/form-data, boundary={boundary}");
+                multipartFormDataContent.Headers.Add("Cookie", "SS-ADMIN-TOKEN=0add09FZcPL90slash0GcDYscig0TEaOiiLGIepm8sSCPPE3gxo8urAb6m7Y1dDM0add06v3qE2Kqx6gkQrVaHbrn0slash00add0gDvZzpi6bPu7PLL3OvL0add0fZsXzPs5BtIEpWwBqUaeuR02mEpSSs6t8pIl6zNzaJ2FgzAXcWQOgKpxoqB9D9YejjOoV0w7C5xzWUq5eoClBsrhgHrVQSV3daz0add07q2ULogUNPE0RptaJ7xR0slash00slash0sWx2suGBcRUurO2g0equals00secret0;");
+
+                var response = await client.PostAsync("http://localhost:44225/SiteServer/cms/pageContentAddHandler.ashx?siteId=1&channelId=2&contentId=42", multipartFormDataContent);
+                //return response;
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseStr = await response.Content.ReadAsStringAsync();
+                }
+            }
+        }
+
 
         public static string GetContentAddUploadWordUrl(int siteId, ChannelInfo nodeInfo, bool isFirstLineTitle, bool isFirstLineRemove, bool isClearFormat, bool isFirstLineIndent, bool isClearFontSize, bool isClearFontFamily, bool isClearImages, int contentLevel, string fileName, string returnUrl)
         {

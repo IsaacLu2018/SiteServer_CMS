@@ -73,8 +73,9 @@
     <i class="ion-search"></i>
     搜索
   </button>
-</div>
 
+</div>
+<div style="float:right" :count="count">稿件总数:{{ count }}</div>
 <div style="position: absolute; top: 50px; overflow: auto;" :style="{'height': tableHeight, 'width': tableWidth}">
   <div class="row" v-if="isSearch">
     <div class="col-sm-12">

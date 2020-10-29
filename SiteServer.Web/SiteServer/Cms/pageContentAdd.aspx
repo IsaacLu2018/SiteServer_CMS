@@ -45,6 +45,10 @@
 
     var isPreviewSaving = false;
 
+    function postData(){
+      console.log('IN POST DATA');
+    }
+
     function preview() {
       if (!$('#TbTitle').val()) return;
       if (isPreviewSaving) return;
