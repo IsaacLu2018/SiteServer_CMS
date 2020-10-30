@@ -532,7 +532,7 @@ namespace SiteServer.CMS.DataCache
                 }
                 var nodeInfo = GetChannelInfo(siteInfo.Id, channelId);
 
-                var listitem = new ListItem(GetSelectText(siteInfo, nodeInfo, permissionsImpl, isLastNodeArray, isShowContentNum), nodeInfo.Id.ToString());
+                var listitem = new ListItem(GetSelectText(siteInfo, nodeInfo, permissionsImpl, isLastNodeArray, false), nodeInfo.Id.ToString());
                 if (!enabled)
                 {
                     listitem.Attributes.Add("style", "color:gray;");
