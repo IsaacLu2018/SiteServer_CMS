@@ -104,10 +104,10 @@ namespace SiteServer.API.Controllers.Home
                 if (channelInfo == null) return BadRequest("无法确定内容对应的栏目");
 
                 var isChecked = checkedLevel >= siteInfo.Additional.CheckContentLevel;
-                if (isChecked)
-                {
-                    checkedLevel = 0;
-                }
+                //if (isChecked)
+                //{
+                //    checkedLevel = 0;
+                //}
                 var tableName = ChannelManager.GetTableName(siteInfo, channelInfo);
 
                 var contentInfoList = new List<ContentInfo>();

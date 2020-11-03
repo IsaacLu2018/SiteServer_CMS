@@ -306,10 +306,10 @@ namespace SiteServer.BackgroundPages.Cms
                     var isCheckedOfUser = CheckManager.GetUserCheckLevel(AuthRequest.AdminPermissionsImpl, SiteInfo, contentInfo.ChannelId, out checkedLevelOfUser);
                     if (CheckManager.IsCheckable(contentInfo.IsChecked, contentInfo.CheckedLevel, isCheckedOfUser, checkedLevelOfUser))
                     {
-                        if (contentInfo.IsChecked)
-                        {
-                            contentInfo.CheckedLevel = 0;
-                        }
+                        //if (contentInfo.IsChecked)
+                        //{
+                        //    contentInfo.CheckedLevel = 0;
+                        //}
 
                         contentInfo.Set(ContentAttribute.CheckUserName, AuthRequest.AdminName);
                         contentInfo.Set(ContentAttribute.CheckDate, DateUtils.GetDateAndTimeString(DateTime.Now));
@@ -543,10 +543,10 @@ namespace SiteServer.BackgroundPages.Cms
                     var isCheckedOfUser = CheckManager.GetUserCheckLevel(AuthRequest.AdminPermissionsImpl, SiteInfo, contentInfo.ChannelId, out checkedLevelOfUser);
                     if (CheckManager.IsCheckable(contentInfo.IsChecked, contentInfo.CheckedLevel, isCheckedOfUser, checkedLevelOfUser))
                     {
-                        if (contentInfo.IsChecked)
-                        {
-                            contentInfo.CheckedLevel = 0;
-                        }
+                        //if (contentInfo.IsChecked)
+                        //{
+                        //    contentInfo.CheckedLevel = 0;
+                        //}
 
                         contentInfo.Set(ContentAttribute.CheckUserName, AuthRequest.AdminName);
                         contentInfo.Set(ContentAttribute.CheckDate, DateUtils.GetDateAndTimeString(DateTime.Now));
