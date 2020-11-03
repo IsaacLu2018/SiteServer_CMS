@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Text;
 using System.Web.Http;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 using NSwag.Annotations;
 using SiteServer.CMS.Core;
 using SiteServer.CMS.Core.Create;
@@ -22,6 +27,7 @@ namespace SiteServer.API.Controllers.V1
         private const string RouteCheck = "check";
         private const string RouteChannel = "{siteId:int}/{channelId:int}";
         private const string RouteContent = "{siteId:int}/{channelId:int}/{id:int}";
+        private const string RouteStatistic = "statistic";
 
         [OpenApiOperation("获取内容列表 API", "https://sscms.com/docs/v6/api/guide/contents/list.html")]
         [HttpPost, Route(Route)]
@@ -451,6 +457,52 @@ namespace SiteServer.API.Controllers.V1
             {
                 Contents = contents
             };
+        }
+
+        [OpenApiOperation("获取各个支队投稿统计详情 API", "https://sscms.com/docs/v6/api/guide/contents/list.html")]
+        [HttpPost, Route(RouteStatistic)]
+        public object GetStatistic([FromBody] QueryStatistic request)
+        {
+            var req = new AuthenticatedRequest();
+            var sourceId = req.GetPostInt(ContentAttribute.SourceId.ToCamelCase());
+            var channelId = request.ChannelId ?? request.SiteId;
+
+            bool isAuth;
+            if (sourceId == SourceManager.User)
+            {
+                isAuth = req.IsUserLoggin && req.UserPermissions.HasChannelPermissions(request.SiteId, channelId, ConfigManager.ChannelPermissions.ContentView);
+            }
+            else
+            {
+                isAuth = req.IsApiAuthenticated &&
+                         AccessTokenManager.IsScope(req.ApiToken, AccessTokenManager.ScopeContents) ||
+                         req.IsUserLoggin &&
+                         req.UserPermissions.HasChannelPermissions(request.SiteId, channelId,
+                             ConfigManager.ChannelPermissions.ContentView) ||
+                         req.IsAdminLoggin &&
+                         req.AdminPermissions.HasChannelPermissions(request.SiteId, channelId,
+                             ConfigManager.ChannelPermissions.ContentView);
+            }
+            if (!isAuth) return Request.Unauthorized<QueryResult>();
+
+            var site = SiteManager.GetSiteInfo(request.SiteId);
+            if (site == null) return Request.BadRequest<QueryResult>("无法确定内容对应的站点");
+
+            var channelInfo = ChannelManager.GetChannelInfo(request.SiteId, channelId);
+            if (channelInfo == null) return Request.BadRequest<QueryResult>("无法确定内容对应的栏目");
+
+            if (!req.AdminPermissionsImpl.HasChannelPermissions(request.SiteId, channelId,
+                ConfigManager.ChannelPermissions.ContentView)) return Request.Unauthorized<QueryResult>();
+
+            var tableName = site.TableName;
+            // 处理月份 20-05
+            string dateString = "20"+request.DateString;
+            var start = Convert.ToDateTime(dateString);
+            var end = start.AddMonths(1).AddDays(-1);
+            var ds = DataProvider.ContentDao.GetDataSetOfAdminArticleStatistic(tableName, request.SiteId, start, end);
+            string json = DatabaseTypeUtils.DataToJson(ds, "error");
+            var obj = JsonConvert.DeserializeObject<object>(json);
+            return obj;
         }
 
         //[OpenApiOperation("获取站点内容API", "")]

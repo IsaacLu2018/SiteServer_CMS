@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SiteServer.CMS.Model;
 
 namespace SiteServer.API.Controllers.V1
@@ -39,6 +40,11 @@ namespace SiteServer.API.Controllers.V1
             public List<ClauseOrder> Orders { get; set; }
             public int Page { get; set; }
             public int PerPage { get; set; }
+        }
+
+        public class QueryStatistic : QueryRequest
+        {
+            public string DateString { get; set; }
         }
 
         public class QueryResult

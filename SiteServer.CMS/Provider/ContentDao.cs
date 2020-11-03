@@ -933,6 +933,13 @@ namespace SiteServer.CMS.Provider
             return ExecuteDataset(sqlString);
         }
 
+        public DataSet GetDataSetOfAdminArticleStatistic(string tableName, int siteId, DateTime begin, DateTime end)
+        {
+            var sqlString = GetSqlStringOfAdminArticleStatistic(tableName, siteId, begin, end);
+
+            return ExecuteDataset(sqlString);
+        }
+
         public int Insert(string tableName, SiteInfo siteInfo, ChannelInfo channelInfo, ContentInfo contentInfo)
         {
             if (contentInfo.SourceId == SourceManager.Preview)
@@ -1858,6 +1865,31 @@ group by tmp.userName";
 
             return sqlString;
         }
+
+        public string GetSqlStringOfAdminArticleStatistic(string tableName, int siteId, DateTime begin, DateTime end)
+        {
+            var sqlString = $@"select userName,SUM(addCount) as addCount, SUM(updateCount) as updateCount from( 
+SELECT AddUserName as userName, Count(AddUserName) as addCount, 0 as updateCount FROM {tableName} 
+INNER JOIN {DataProvider.AdministratorDao.TableName} ON AddUserName = {DataProvider.AdministratorDao.TableName}.UserName 
+WHERE {tableName}.SiteId = {siteId} AND (({tableName}.ChannelId > 0)) 
+AND isChecked='True' AND CheckedLevel=1
+AND LastEditDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetComparableDate(end.AddDays(1))}
+GROUP BY AddUserName
+Union
+SELECT LastEditUserName as userName,0 as addCount, Count(LastEditUserName) as updateCount FROM {tableName} 
+INNER JOIN {DataProvider.AdministratorDao.TableName} ON LastEditUserName = {DataProvider.AdministratorDao.TableName}.UserName 
+WHERE {tableName}.SiteId = {siteId} AND (({tableName}.ChannelId > 0)) 
+AND isChecked='True' AND CheckedLevel=1
+AND LastEditDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetComparableDate(end.AddDays(1))}
+AND LastEditDate != AddDate
+GROUP BY LastEditUserName
+) as tmp
+group by tmp.userName";
+
+
+            return sqlString;
+        }
+
 
         public string GetStlWhereString(int siteId, string group, string groupNot, string tags, bool isTopExists, bool isTop, string where)
         {
