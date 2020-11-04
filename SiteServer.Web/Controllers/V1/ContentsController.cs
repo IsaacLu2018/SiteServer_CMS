@@ -498,7 +498,7 @@ namespace SiteServer.API.Controllers.V1
             // 处理月份 20-05
             string dateString = "20"+request.DateString;
             var start = Convert.ToDateTime(dateString);
-            var end = start.AddMonths(1).AddDays(-1);
+            var end = start.AddMonths(1).AddDays(-2);
             var ds = DataProvider.ContentDao.GetDataSetOfAdminArticleStatistic(tableName, request.SiteId, start, end);
             string json = DatabaseTypeUtils.DataToJson(ds, "error");
             var obj = JsonConvert.DeserializeObject<object>(json);
