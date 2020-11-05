@@ -45,6 +45,8 @@ namespace SiteServer.API.Controllers.V1
         public class QueryStatistic : QueryRequest
         {
             public string DateString { get; set; }
+            public string start { get; set; }
+            public string end { get; set; }
         }
 
         public class QueryResult

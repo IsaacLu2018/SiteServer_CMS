@@ -1873,14 +1873,14 @@ SELECT AddUserName as userName, Count(AddUserName) as addCount, 0 as updateCount
 INNER JOIN {DataProvider.AdministratorDao.TableName} ON AddUserName = {DataProvider.AdministratorDao.TableName}.UserName 
 WHERE {tableName}.SiteId = {siteId} AND (({tableName}.ChannelId > 0)) 
 AND isChecked='True' AND CheckedLevel=1
-AND AddDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetComparableDate(end.AddDays(1))}
+AND AddDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetComparableDate(end)}
 GROUP BY AddUserName
 Union
 SELECT LastEditUserName as userName,0 as addCount, Count(LastEditUserName) as updateCount FROM {tableName} 
 INNER JOIN {DataProvider.AdministratorDao.TableName} ON LastEditUserName = {DataProvider.AdministratorDao.TableName}.UserName 
 WHERE {tableName}.SiteId = {siteId} AND (({tableName}.ChannelId > 0)) 
 AND isChecked='True' AND CheckedLevel=1
-AND AddDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetComparableDate(end.AddDays(1))}
+AND AddDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetComparableDate(end)}
 GROUP BY LastEditUserName
 ) as tmp
 group by tmp.userName  ORDER BY addCount DESC";
