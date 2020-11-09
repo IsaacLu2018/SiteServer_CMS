@@ -1868,20 +1868,19 @@ group by tmp.userName";
 
         public string GetSqlStringOfAdminArticleStatistic(string tableName, int siteId, DateTime begin, DateTime end)
         {
-            var sqlString = $@"select userName,SUM(addCount) as addCount, SUM(updateCount) as updateCount from( 
-SELECT AddUserName as userName, Count(AddUserName) as addCount, 0 as updateCount FROM {tableName} 
+            var sqlString = $@"select userName,SUM(addCount) as addCount, SUM(allCount) as allCount from( 
+SELECT AddUserName as userName, Count(AddUserName) as addCount, 0 as allCount FROM {tableName} 
 INNER JOIN {DataProvider.AdministratorDao.TableName} ON AddUserName = {DataProvider.AdministratorDao.TableName}.UserName 
 WHERE {tableName}.SiteId = {siteId} AND (({tableName}.ChannelId > 0)) 
 AND isChecked='True' AND CheckedLevel=1
 AND AddDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetComparableDate(end)}
 GROUP BY AddUserName
 Union
-SELECT LastEditUserName as userName,0 as addCount, Count(LastEditUserName) as updateCount FROM {tableName} 
-INNER JOIN {DataProvider.AdministratorDao.TableName} ON LastEditUserName = {DataProvider.AdministratorDao.TableName}.UserName 
+SELECT AddUserName as userName,0 as addCount,Count(AddUserName) as allCount FROM siteserver_Content_1 
+INNER JOIN {DataProvider.AdministratorDao.TableName} ON AddUserName = {DataProvider.AdministratorDao.TableName}.UserName 
 WHERE {tableName}.SiteId = {siteId} AND (({tableName}.ChannelId > 0)) 
-AND isChecked='True' AND CheckedLevel=1
 AND AddDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetComparableDate(end)}
-GROUP BY LastEditUserName
+GROUP BY AddUserName
 ) as tmp
 group by tmp.userName  ORDER BY addCount DESC";
 
