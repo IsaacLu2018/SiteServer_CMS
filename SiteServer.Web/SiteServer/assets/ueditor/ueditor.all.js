@@ -10559,18 +10559,26 @@ UE.plugins['autotypeset'] = function(){
                 continue;
             }
              //font-size
-            if(opt.clearFontSize && ci.style.fontSize){
-                //domUtils.removeStyle(ci,'font-size');
-                ci.style.cssText=ci.style.cssText.replace(new RegExp("font-size"+"[^:]*:[^;]+;?","ig"),"font-size: 18px;");
-                ci.style.cssText=ci.style.cssText.replace(new RegExp("line-height"+"[^:]*:[^;]+;?","ig"),"line-height: 1.75em;");
-                ci.style.cssText=ci.style.cssText.replace(new RegExp("margin"+"[^:]*:[^;]+;?","ig"),"");
+            if(opt.clearFontSize){
+                domUtils.removeStyle(ci,'font-size');
+                domUtils.removeStyle(ci,"line-height");
+                // domUtils.setStyles(ci,"font-size:18px;line-height: 1.75em;font-family: 宋体, SimSun;")
+                domUtils.setStyle(ci,"font-size","18px");
+                domUtils.setStyle(ci,"line-height","1.75em");
+                domUtils.setStyle(ci,"font-family","宋体, SimSun");
+                // ci.style.cssText=ci.style.cssText.replace(new RegExp("font-size"+"[^:]*:[^;]+;?","ig"),"font-size: 18px;");
+                // ci.style.cssText=ci.style.cssText.replace(new RegExp("line-height"+"[^:]*:[^;]+;?","ig"),"line-height: 1.75em;");
+                // ci.style.cssText=ci.style.cssText.replace(new RegExp("margin"+"[^:]*:[^;]+;?","ig"),"");
                 removeNotAttributeSpan(ci);
 
             }
             //font-family
-            if(opt.clearFontFamily && ci.style.fontFamily){
-                //domUtils.removeStyle(ci,'font-family');
-                ci.style.cssText=ci.style.cssText.replace(new RegExp("font-family"+"[^:]*:[^;]+;?","ig"),"font-family: 宋体, SimSun;");
+            if(opt.clearFontFamily){
+                domUtils.removeStyle(ci,'font-family');
+                domUtils.setStyle(ci,"font-size","18px");
+                domUtils.setStyle(ci,"line-height","1.75em");
+                domUtils.setStyle(ci,"font-family","宋体, SimSun");
+                //ci.style.cssText=ci.style.cssText.replace(new RegExp("font-family"+"[^:]*:[^;]+;?","ig"),"font-family: 宋体, SimSun;");
                 removeNotAttributeSpan(ci);
             }
 
