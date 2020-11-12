@@ -289,15 +289,15 @@ namespace SiteServer.API.Controllers.V1
                     SourceId = sourceId
                 });
 
-                var postCheckedLevel = request.GetPostInt(ContentAttribute.CheckedLevel.ToCamelCase());
-                var isChecked = postCheckedLevel >= siteInfo.Additional.CheckContentLevel;
-                var checkedLevel = postCheckedLevel;
+                //var postCheckedLevel = request.GetPostInt(ContentAttribute.CheckedLevel.ToCamelCase());
+                //var isChecked = postCheckedLevel >= siteInfo.Additional.CheckContentLevel;
+                //var checkedLevel = postCheckedLevel;
 
-                contentInfo.Load(new
-                {
-                    IsChecked = isChecked,
-                    CheckedLevel = checkedLevel
-                });
+                //contentInfo.Load(new
+                //{
+                //    IsChecked = isChecked,
+                //    CheckedLevel = checkedLevel
+                //});
 
                 DataProvider.ContentDao.Update(siteInfo, channelInfo, contentInfo);
 
