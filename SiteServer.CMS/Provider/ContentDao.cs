@@ -1880,6 +1880,7 @@ SELECT AddUserName as userName,0 as addCount,Count(AddUserName) as allCount FROM
 INNER JOIN {DataProvider.AdministratorDao.TableName} ON AddUserName = {DataProvider.AdministratorDao.TableName}.UserName 
 WHERE {tableName}.SiteId = {siteId} AND (({tableName}.ChannelId > 0)) 
 AND AddDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetComparableDate(end)}
+AND CheckedLevel!=-99
 GROUP BY AddUserName
 ) as tmp
 group by tmp.userName  ORDER BY addCount DESC";
