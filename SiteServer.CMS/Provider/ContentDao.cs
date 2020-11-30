@@ -1877,7 +1877,7 @@ AND AddDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetCompara
 GROUP BY AddUserName
 Union
 SELECT AddUserName as userName,0 as addCount,Count(AddUserName) as allCount FROM siteserver_Content_1 
-INNER JOIN {DataProvider.AdministratorDao.TableName} ON AddUserName = {DataProvider.AdministratorDao.TableName}.UserName 
+INNER JOIN {DataProvider.AdministratorDao.TableName} ON AdminId = {DataProvider.AdministratorDao.TableName}.Id 
 WHERE {tableName}.SiteId = {siteId} AND (({tableName}.ChannelId > 0)) 
 AND AddDate BETWEEN {SqlUtils.GetComparableDate(begin)} AND {SqlUtils.GetComparableDate(end)}
 AND CheckedLevel!=-99

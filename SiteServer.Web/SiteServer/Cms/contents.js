@@ -137,6 +137,10 @@ var methods = {
     }
   },
 
+  getLink:function(content){
+    console.log('content', content);
+  },
+
   selectAll: function () {
     this.isAllChecked = !this.isAllChecked;
     for (var i = 0; i < this.pageContents.length; i++) {

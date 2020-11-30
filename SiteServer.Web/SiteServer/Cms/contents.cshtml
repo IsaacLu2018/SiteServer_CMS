@@ -127,7 +127,7 @@
   
           <template v-if="column.attributeName === 'Title'">
             <template v-if="content.isChecked">
-              <a :href="content.navigationUrl" v-html="content.title" target="_blank" v-on:click.stop></a>
+              <a href="javascript:;" v-on:click="utils.createPreview(content)" v-html="content.title" v-on:click.stop></a>
             </template>
             <template v-else>
               <a href="javascript:;" v-html="content.title" v-on:click="btnLayerClick({title: '查看内容', name: 'View', channelId: content.channelId, contentId: content.id, full: true}, $event)"></a>

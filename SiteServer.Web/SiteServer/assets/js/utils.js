@@ -143,14 +143,18 @@ var utils = {
     return false;
   },
   createPreview: function (data) {
-    console.log("data", data);
-    const url = "/api" + data.getInfoUrl;
-    const previewUrl = data.url;
+    const contentUrl = data.getInfoUrl
+      ? data.getInfoUrl
+      : `/v1/contents/${data.siteId}/${data.channelId}/${data.id}`;
+    const url = "/api" + contentUrl;
+    const previewUrl = data.url
+      ? data.url
+      : `/SiteServer/cms/pageContentAddHandler.ashx?siteId=${data.siteId}&channelId=${data.channelId}&contentId=${data.id}`;
+    console.log("previewUrl", previewUrl);
     // 先调用接口.../v1/contents/1/2/25
     // 直接用cookie访问 不需要APIKEY
     // 直接提交表单/
     axios.get(url, {}).then(function (response) {
-      console.log("response", response);
       const {
         title,
         addDate,
@@ -161,8 +165,10 @@ var utils = {
         poster,
         source,
         imageUrl,
+        fileUrl,
+        fileUrlExtends,
+        imageUrlExtends,
       } = response.data.value;
-      console.log('previewUrl', previewUrl);
       let params = new URLSearchParams();
       params.append("ImageUrl", imageUrl);
       params.append("TbAddDate", addDate);
@@ -173,14 +179,27 @@ var utils = {
       params.append("Content", content);
       params.append("Hits", hits);
       params.append("TbTitle", title);
+      params.append("fileUrl", fileUrl);
+      if (fileUrlExtends > 0) {
+        for (let index = 1; index <= fileUrlExtends; index++) {
+          const element = response.data.value[`fileUrlExtend${index}`];
+          params.append(`FileUrl_Extend`, element);
+        }
+      }
 
-      console.log("params", params);
+      if (imageUrlExtends > 0) {
+        for (let index = 1; index <= imageUrlExtends; index++) {
+          const element = response.data.value[`imageUrlExtend${index}`];
+          params.append(`ImageUrl_Extend`, element);
+        }
+      }
+
       axios({
         method: "post",
         url: previewUrl,
         data: params,
       }).then(function (res) {
-        if(res.data.previewUrl){
+        if (res.data.previewUrl) {
           window.open(res.data.previewUrl);
         }
       });

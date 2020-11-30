@@ -19,28 +19,38 @@ namespace SiteServer.BackgroundPages.Core
 {
     public static class WebUtils
     {
-        public static string GetContentTitle(SiteInfo siteInfo, ContentInfo contentInfo, string pageUrl)
+        public static string GetContentTitle(SiteInfo siteInfo, ContentInfo contentInfo, string pageUrl,string xmlStr="")
         {
             string url;
             var title = ContentUtility.FormatTitle(contentInfo.GetString(ContentAttribute.GetFormatStringAttributeName(ContentAttribute.Title)), contentInfo.Title);
 
             var displayString = contentInfo.IsColor ? $"<span style='color:#ff0000;text-decoration:none' title='醒目'>{title}</span>" : title;
 
-            if (contentInfo.IsChecked && contentInfo.ChannelId > 0)
-            {
-                url =
-                    $"<a href='{PageRedirect.GetRedirectUrlToContent(siteInfo.Id, contentInfo.ChannelId, contentInfo.Id)}' target='blank'>{displayString}</a>";
-            }
-            else
-            {
+            //if (contentInfo.IsChecked && contentInfo.ChannelId > 0)
+            //{
+            //    url =
+            //        $"<a href='{PageRedirect.GetRedirectUrlToContent(siteInfo.Id, contentInfo.ChannelId, contentInfo.Id)}' target='blank'>{displayString}</a>";
+            //}
+            //else
+            //{
+                var xmlContent = GetInfo(xmlStr);
                 var layerUrl =
                     $@"contentsLayerView.cshtml?siteId={siteInfo.Id}&channelId={-contentInfo.ChannelId}&contentId={contentInfo.Id}";
                 //ModalContentView.GetOpenWindowString(siteInfo.Id, contentInfo.ChannelId, contentInfo.Id, pageUrl)
                 string previewUrl = $"/SiteServer/cms/pageContentAddHandler.ashx?siteId={siteInfo.Id}&channelId={contentInfo.ChannelId}&contentId={contentInfo.Id}";
-                string onClickStr =   $@"utils.createPreview({{Tbtitle: '{contentInfo.Title}', url: '{previewUrl}', ImageUrl: '{contentInfo.ImageUrl}', Author:'{contentInfo.Author}',Source:'{ contentInfo.Source}',Content:'{contentInfo.Content}',auditor:'auditor',poster:'poster',getInfoUrl:'/v1/contents/{siteInfo.Id}/{contentInfo.ChannelId}/{contentInfo.Id}'}})";
+                string previewStr = $"Tbtitle: '{contentInfo.Title}', url: '{previewUrl}', ImageUrl: '{contentInfo.ImageUrl}', Author:'{contentInfo.Author}',Source:'{ contentInfo.Source}',Content:'{contentInfo.Content}',auditor:'{xmlContent.auditor}',poster:'{xmlContent.poster}',getInfoUrl:'/v1/contents/{siteInfo.Id}/{contentInfo.ChannelId}/{contentInfo.Id}'";
+                if (!string.IsNullOrEmpty(xmlContent.fileUrl_Extend)) {
+                    previewStr += $",fileUrl_Extend:'{xmlContent.fileUrl_Extend}'";
+                }
+                if (!string.IsNullOrEmpty(xmlContent.imageUrl_Extend))
+                {
+                    previewStr += $",imageUrl_Extend:'{xmlContent.imageUrl_Extend}'";
+                }
+
+                string onClickStr =   $@"utils.createPreview({{{previewStr}}})";
                 url =
                     $@"<a href=""javascript:;"" onclick=""{onClickStr}"">{displayString}</a>";
-            }
+            //}
 
             var image = string.Empty;
             if (contentInfo.IsRecommend)
@@ -120,6 +130,37 @@ namespace SiteServer.BackgroundPages.Core
             }
         }
 
+        private static XmlContent GetXmlContent(string xmlStr)
+        {
+
+            string[] imgs;
+            string[] files;
+            var info = Newtonsoft.Json.JsonConvert.DeserializeObject<XmlSettingInfo>(xmlStr);
+            imgs = info.imageUrl_Extend?.Split(',');
+            files =  info.fileUrl_Extend?.Split(',');
+
+            return new XmlContent {imgs=imgs,files=files,auditor=info.auditor,poster=info.poster };
+        }
+
+        private static XmlSettingInfo GetInfo(string xmlStr)
+        { 
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<XmlSettingInfo>(xmlStr);
+        }
+
+        public class XmlSettingInfo
+        {
+            public string imageUrl_Extend { get; set; }
+            public string fileUrl_Extend { get; set; }
+            public string auditor { get; set; }
+            public string poster { get; set; }
+        }
+        public class XmlContent
+        { 
+             public string[] imgs { get; set; }
+            public string[] files { get; set; }
+            public string auditor { get; set; }
+            public string poster { get; set; }
+        }
 
         public static string GetContentAddUploadWordUrl(int siteId, ChannelInfo nodeInfo, bool isFirstLineTitle, bool isFirstLineRemove, bool isClearFormat, bool isFirstLineIndent, bool isClearFontSize, bool isClearFontFamily, bool isClearImages, int contentLevel, string fileName, string returnUrl)
         {

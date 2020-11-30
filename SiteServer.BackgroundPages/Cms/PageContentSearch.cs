@@ -54,7 +54,7 @@ namespace SiteServer.BackgroundPages.Cms
         private Dictionary<string, Dictionary<string, Func<IContentContext, string>>> _pluginColumns;
         private bool _isEdit;
         private readonly Dictionary<string, string> _nameValueCacheDict = new Dictionary<string, string>();
-
+        private CMS.Provider.ContentDao ContentDao = new CMS.Provider.ContentDao();
         public static string GetRedirectUrlCheck(int siteId)
         {
             return PageUtils.GetCmsUrl(siteId, nameof(PageContentSearch), new NameValueCollection
@@ -124,7 +124,7 @@ namespace SiteServer.BackgroundPages.Cms
                 TableName = tableName,
                 PageSize = SiteInfo.Additional.PageSize,
                 Page = AuthRequest.GetQueryInt(Pager.QueryNamePage, 1),
-                OrderSqlString = state == -200? "ORDER BY IsChecked ASC,CheckedLevel DESC" : ETaxisTypeUtils.GetContentOrderByString(ETaxisType.OrderByIdDesc),
+                OrderSqlString = state == -200 ? "ORDER BY IsChecked ASC,CheckedLevel DESC" : ETaxisTypeUtils.GetContentOrderByString(ETaxisType.OrderByIdDesc),
                 ReturnColumnNames = TranslateUtils.ObjectCollectionToString(allAttributeNameList),
                 WhereSqlString = whereString,
                 TotalCount = DataProvider.DatabaseDao.GetPageTotalCount(tableName, whereString)
@@ -176,7 +176,7 @@ namespace SiteServer.BackgroundPages.Cms
             {
                 CheckManager.LoadContentLevelToList(DdlState, SiteInfo, _isCheckOnly, isChecked, checkedLevel);
             }
-            
+
             ControlUtils.SelectSingleItem(DdlState, state.ToString());
 
             foreach (var styleInfo in _allStyleInfoList)
@@ -202,7 +202,7 @@ namespace SiteServer.BackgroundPages.Cms
             PgContents.DataBind();
 
             LtlColumnsHead.Text += TextUtility.GetColumnsHeadHtml(_styleInfoList, _pluginColumns, _attributesOfDisplay);
-            
+
 
             BtnSelect.Attributes.Add("onclick", ModalSelectColumns.GetOpenWindowString(SiteId, _channelId));
 
@@ -268,17 +268,18 @@ namespace SiteServer.BackgroundPages.Cms
             if (e.Item.ItemType != ListItemType.Item && e.Item.ItemType != ListItemType.AlternatingItem) return;
 
             var contentInfo = new ContentInfo((IDataRecord)e.Item.DataItem);
-
+            var tableName = ChannelManager.GetTableName(SiteInfo, _channelId);
+            var tuple = ContentDao.GetValue(tableName, contentInfo.Id, ContentAttribute.SettingsXml);
             var ltlTitle = (Literal)e.Item.FindControl("ltlTitle");
             var ltlChannel = (Literal)e.Item.FindControl("ltlChannel");
             var ltlColumns = (Literal)e.Item.FindControl("ltlColumns");
             var ltlStatus = (Literal)e.Item.FindControl("ltlStatus");
             var ltlSelect = (Literal)e.Item.FindControl("ltlSelect");
 
-            ltlTitle.Text = WebUtils.GetContentTitle(SiteInfo, contentInfo, PageUrl);
+            ltlTitle.Text = WebUtils.GetContentTitle(SiteInfo, contentInfo, PageUrl, tuple.Item2);
 
             string specialHtml;
-            
+
             if (_isTrashOnly)
             {
                 specialHtml = DateUtils.GetDateAndTimeString(contentInfo.LastEditDate);
